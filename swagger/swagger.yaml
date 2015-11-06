@@ -1,0 +1,729 @@
+swagger: '2.0'
+info:
+  version: 0.9.0
+  title: WSO2 Identity Management API
+basePath: /vt-wso2-identity-mgmt-api
+schemes:
+  - https
+paths:
+  /captchas:
+    post:
+      tags:
+        - captcha
+      description: Generates a captcha
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Captcha'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - captcha
+      description: Validate captcha answer and return a key
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+        - name: action
+          in: query
+          description: The action to take.
+          type: string
+          enum:
+            - verifyAccount
+            - verifyCode
+            - verifyUser
+        - name: body
+          in: body
+          description: 'The username and captcha to verify. If action is verifyAccount, username and captcha should be used. If action is verifyCode, username, code and captcha should be used. If action is verifyUser, username and captcha should be used.'
+          schema:
+            $ref: '#/definitions/CaptchaVerification'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '400':
+          description: Bad request. Captcha could not be validated.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+  '/captchas/{id}':
+    get:
+      tags:
+        - captcha
+      description: Retrieves a captcha image.
+      consumes:
+        - application/json
+      produces:
+        - image/jpeg
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - name: id
+          in: path
+          description: Captcha image id.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+          schema:
+            type: file
+        '404':
+          description: Not Found. Image not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+  /challengequestions:
+    get:
+      tags:
+        - question
+      description: Retrieves the user’s challenge questions with the generated key.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - name: username
+          in: query
+          description: The username
+          type: string
+        - name: confirmation
+          in: query
+          description: The key
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ChallengeQuestion'
+        '401':
+          description: Unauthorized. Invalid confirmation key.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found. Username not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+  '/challengequestions/{id}':
+    get:
+      tags:
+        - question
+      description: Retrieve the user’s challenge question for the specified claim URI ID.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - name: id
+          in: path
+          description: Question id
+          required: true
+          type: string
+        - name: username
+          in: query
+          description: The username
+          type: string
+        - name: confirmation
+          in: query
+          description: The key
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ChallengeQuestion'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: Unauthorized. Invalid confirmation key.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Username or question id not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+  '/challengequestions/{id}/answers':
+    post:
+      tags:
+        - question
+      description: Validates the answer and confirmation code for the specified question.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+        - name: id
+          in: path
+          description: Question id
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: The answer
+          schema:
+            $ref: '#/definitions/ChallengeAnswer'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: 'Unauthorized. Invalid username, confirmation code or answer.'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Question not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+  /claims:
+    get:
+      tags:
+        - claim
+      description: Returns all the claims defined in the Identity Server which are supported and not read only
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - name: dialect
+          in: query
+          description: The claim dialect
+          required: true
+          type: string
+        - name: type
+          in: query
+          description: Claim type. Type identity indicates identity management supported claims, used for account recovery, and type user indicates useer claims.
+          required: true
+          type: string
+          enum:
+            - identity
+            - user
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserClaim'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '404':
+          description: Not Found. Unknown claim dialect.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+  /notifications:
+    post:
+      tags:
+        - notification
+      description: Send an email notification with a confirmation code to the user
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+        - name: body
+          in: body
+          description: The retrieved key from verification of a captcha.
+          schema:
+            $ref: '#/definitions/RecoveryNotification'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: Unauthorized. Invalid username or key.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+  /users:
+    post:
+      tags:
+        - user
+      description: Register a user account.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+        - name: body
+          in: body
+          description: The user object.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '400':
+          description: Bad request. Invalid username or required attributes missing.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - user
+      description: Confirm user registration. This resource exists here because self registration is a two-step process in which an email notification with a link is sent to the user as the first step. In the second step, where the user confirms his registration, the user id is not known, which explains why this resource is a PUT operation against /users.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Content-Type'
+        - name: body
+          in: body
+          description: The user confirmation object.
+          schema:
+            $ref: '#/definitions/UserConfirmation'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: Unauthorized. Invalid captcha or confirmation.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Username not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+  '/users/{userId}':
+    get:
+      tags:
+        - user
+      description: Retrieves the details of a user account.
+      parameters:
+        - $ref: '#/parameters/userId'
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/If-None-Match'
+        - $ref: '#/parameters/If-Modified-Since'
+      responses:
+        '200':
+          description: OK Requested Account will be returned
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+            ETag:
+              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              type: string
+            Last-Modified:
+              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              type: string
+          schema:
+            $ref: '#/definitions/User'
+        '304':
+          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+        '401':
+          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Requested Account does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - user
+      description: Update the details of a user account.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/Content-Type'
+        - $ref: '#/parameters/userId'
+        - name: action
+          in: query
+          description: 'What part of the user account to update. The value updateProfile indicates that the user profile should be updated, and the value updatePassword that the password should be updated Finally, the value recoverPassword indicates that the password should be reset, in which case a confirmation code is required.'
+          required: true
+          type: string
+          enum:
+            - updateProfile
+            - updatePassword
+            - recoverPassword
+        - name: body
+          in: body
+          description: The user object.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: Unauthorized. Invalid captcha or confirmation.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Username not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
+parameters:
+  Accept:
+    name: Accept
+    in: header
+    description: Media type for the response.
+    type: string
+  Authorization:
+    name: Authorization
+    in: header
+    description: OAuth2 authorization header
+    type: string
+  Content-Type:
+    name: Content-Type
+    in: header
+    description: Media type of the entity in the request body.
+    type: string
+  If-None-Match:
+    name: If-None-Match
+    in: header
+    description: Validator for conditional requests; based on ETag.
+    type: string
+  If-Modified-Since:
+    name: If-Modified-Since
+    in: header
+    description: Validator for conditional requests; based on Last Modified header.
+    type: string
+  userId:
+    name: userId
+    in: path
+    description: User id
+    required: true
+    type: integer
+    format: int32
+definitions:
+  Captcha:
+    type: object
+    properties:
+      imageId:
+        type: string
+      secretKey:
+        type: string
+      userAnswer:
+        type: string
+  CaptchaVerification:
+    type: object
+    properties:
+      userName:
+        type: string
+      captcha:
+        $ref: '#/definitions/Captcha'
+      code:
+        type: string
+      tenantDomain:
+        type: string
+  ChallengeAnswer:
+    type: object
+    properties:
+      userName:
+        type: string
+      confirmation:
+        type: string
+      questionId:
+        type: string
+      answer:
+        type: string
+  ChallengeQuestion:
+    type: object
+    required:
+      - order
+      - primary
+      - verfied
+    properties:
+      answer:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      key:
+        type: string
+      order:
+        type: integer
+        format: int32
+      primary:
+        type: boolean
+      question:
+        type: string
+      verfied:
+        type: boolean
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+      description:
+        type: string
+      moreInfo:
+        type: string
+      error:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorListItem'
+  ErrorListItem:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+  Notification:
+    type: object
+    required:
+      - notificationSent
+      - userId
+    properties:
+      domainName:
+        type: string
+      firstName:
+        type: string
+      notification:
+        type: string
+      notificationAddress:
+        type: string
+      notificationCode:
+        type: string
+      notificationSent:
+        type: boolean
+      notificationSubject:
+        type: string
+      notificationType:
+        type: string
+      userId:
+        type: string
+  Password:
+    type: object
+    properties:
+      confirmationCode:
+        type: string
+      password:
+        type: string
+      newPassword:
+        type: string
+  RecoveryNotification:
+    type: object
+    properties:
+      userName:
+        type: string
+      key:
+        type: string
+      notificationType:
+        type: string
+  UserClaim:
+    type: object
+    properties:
+      claimUri:
+        type: string
+      claimValue:
+        type: string
+      description:
+        type: string
+      dialectURI:
+        type: string
+      displayOrder:
+        type: integer
+        format: int32
+      displayTag:
+        type: string
+      regEx:
+        type: string
+      required:
+        type: string
+      supportedByDefault:
+        type: string
+  User:
+    type: object
+    required:
+      - userName
+    properties:
+      id:
+        type: integer
+        format: int32
+      userName:
+        type: string
+      password:
+        $ref: '#/definitions/Password'
+      claims:
+        type: array
+        items:
+          $ref: '#/definitions/UserClaim'
+      profileName:
+        type: string
+      tenantDomain:
+        type: string
+      lastModifiedDate:
+        type: string
+        format: date-time
+  UserConfirmation:
+    type: object
+    properties:
+      username:
+        type: string
+      code:
+        type: string
+      captcha:
+        $ref: '#/definitions/Captcha'
+      tenantDomain:
+        type: string
+  Verification:
+    type: object
+    required:
+      - verified
+    properties:
+      error:
+        type: string
+      key:
+        type: string
+      notificationData:
+        $ref: '#/definitions/Notification'
+      redirectPath:
+        type: string
+      userId:
+        type: string
+      verified:
+        type: boolean
