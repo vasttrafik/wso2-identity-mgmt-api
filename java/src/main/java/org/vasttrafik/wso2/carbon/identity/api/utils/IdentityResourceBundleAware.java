@@ -5,5 +5,5 @@ package org.vasttrafik.wso2.carbon.identity.api.utils;
  *
  */
 public interface IdentityResourceBundleAware {
-	public static final String resourceBundle = "org.vasttrafik.se.carbon.identity.api.utils.IdentityErrorListResourceBundle";
+	public static final String resourceBundle = "org.vasttrafik.wso2.carbon.identity.api.utils.IdentityErrorListResourceBundle";
 }
