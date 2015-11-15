@@ -44,6 +44,23 @@ public class ChallengeQuestions implements IdentityResourceBundleAware {
         return delegate.getChallengequestions(username, confirmation);
     }
 	
+	@POST
+    public Response setChallengequestion(
+    		@HeaderParam("Accept") String accept,
+			@HeaderParam("Authorization") String authorization,
+    		@QueryParam("userId") Integer userId,
+			ChallengeQuestion question) 
+    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException, NotFoundException
+    {
+    	ResponseUtils.checkParameter(
+    			resourceBundle,
+    			"userId", 
+    			true, 
+    			new String[]{}, (userId != null ? String.valueOf(userId) : null));
+      	
+        return delegate.setChallengequestion(authorization, userId, question);
+    }
+	
     @GET
     @Path("/{id}")
     public Response getChallengequestion(

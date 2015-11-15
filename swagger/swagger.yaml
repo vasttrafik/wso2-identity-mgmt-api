@@ -151,6 +151,36 @@ paths:
           description: Not Acceptable. The requested media type is not supported
           schema:
             $ref: '#/definitions/Error'
+	post:
+	  tags:
+        - question
+	  description: Sets a challenge question. The following attributes are required: id, order, question, answer
+	  consumes:
+        - application/json
+	  produces:
+        - application/json
+	  parameters:
+        - $ref: '#/parameters/Accept'
+		- $ref: '#/parameters/Authorization'
+		- name: userId
+          in: query
+          description: The username
+          type: integer
+		  format: int32
+		- name: body
+          in: body
+          description: The challenge question to set
+          schema:
+            $ref: '#/definitions/ChallengeQuestion'
+	  responses:
+        '201':
+          description: Successful response
+        '401':
+          description: Unauthorized. Invalid authorization header or userId does not match access token
+		'404':
+          description: Not found. Question id not found.
+		'406':
+          description: Not Acceptable. The requested media type is not supported
   '/challengequestions/{id}':
     get:
       tags:
@@ -566,10 +596,6 @@ definitions:
         type: string
   ChallengeQuestion:
     type: object
-    required:
-      - order
-      - primary
-      - verfied
     properties:
       answer:
         type: string
@@ -586,7 +612,7 @@ definitions:
         type: boolean
       question:
         type: string
-      verfied:
+      verified:
         type: boolean
   Error:
     type: object

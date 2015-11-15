@@ -10,24 +10,28 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeAnswer;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeQuestion;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
 import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
+import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.mgt.stub.UserIdentityManagementAdminServiceStub;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionIdsDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserChallengesDTO;
+import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 
 /**
  * @author Lars Andersson
  *
  */
 public final class ChallengeQuestionsClient extends UserInformationRecoveryClient {
+
+	private RemoteUserStoreManagerServiceStub userStoreStub = ClientUtils.getRemoteUserStoreManagerServiceStub();
+	private UserIdentityManagementAdminServiceStub identityMgmtStub = ClientUtils.getUserIdentityManagementServiceStub();
 	
 	public ChallengeQuestionsClient() {
 		super();
 	}
 	
-	//
-	// TO-DO: Replace with UserIdentityManagementAdminService getChallengeQuestionsOfUser?
-	//
 	/**
 	 * Retrieves all challenge questions of a user
 	 * @param username the username of the user 
@@ -90,6 +94,45 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 		catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}
+	}
+	
+	/**
+	 * Sets a challenge question.
+	 * @param authorization the OAuth2 access token
+	 * @param username the username of the user to which the challenge question belongs
+	 * @param question the challenge question 
+	 * @return the challenge question
+	 * @throws Exception
+	 */
+	public void setChallengequestion(String authorization, Integer userId, ChallengeQuestion question) throws Exception {
+		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		ClientUtils.authenticateIfNeeded(identityMgmtStub._getServiceClient());
+		
+		String userName = null;
+		
+		try {
+			 // Validate the token and get the username
+			userName = UserAdminUtils.validateToken(userId, authorization);
+		}
+		catch (Exception e) {
+			throw new NotAuthorizedException(e.getMessage());
+		}
+		
+		UserChallengesDTO[] userChallengesDTOs = new UserChallengesDTO[1];
+		userChallengesDTOs[0] = new UserChallengesDTO();
+		userChallengesDTOs[0].setId(question.getId());
+		userChallengesDTOs[0].setOrder(question.getOrder());
+		userChallengesDTOs[0].setQuestion(question.getQuestion());
+		userChallengesDTOs[0].setAnswer(question.getAnswer());
+			
+		try {
+			// Set the challenge question of the user
+			identityMgmtStub.setChallengeQuestionsOfUser(userName, userChallengesDTOs);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	

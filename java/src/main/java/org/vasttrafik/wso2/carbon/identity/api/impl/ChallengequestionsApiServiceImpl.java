@@ -63,7 +63,35 @@ public class ChallengequestionsApiServiceImpl {
 			throw new NotAuthorizedException(response);
 		}
 		catch (Exception e) { 
-			System.out.println("getChallengequestion:" + e.getClass().getName());
+			Response response = ResponseUtils.serverError(e);
+			throw new InternalServerErrorException(response);
+		}
+	}
+	
+	/**
+	 * Sets a challenge question.
+	 * @param authorization the OAuth2 access token
+	 * @param username the username of the user to which the challenge question belongs
+	 * @param question the challenge question to set
+	 * @return the result of the operation
+	 * @throws Exception
+	 */
+	public Response setChallengequestion(String authorization, Integer userId, ChallengeQuestion question) 
+		throws InternalServerErrorException, NotFoundException, NotAuthorizedException
+	{
+		try {
+			client.setChallengequestion(authorization, userId, question);
+			return Response.ok().build();
+		}
+		catch (NotAuthorizedException na) {
+			Response response = Response.status(401).build();
+			throw new NotAuthorizedException(response);
+		}
+		catch (NotFoundException nf) {
+			Response response = Response.status(404).build();
+			throw new NotFoundException(response);
+		}
+		catch (Exception e) { 
 			Response response = ResponseUtils.serverError(e);
 			throw new InternalServerErrorException(response);
 		}
