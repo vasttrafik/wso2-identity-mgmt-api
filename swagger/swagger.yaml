@@ -151,35 +151,35 @@ paths:
           description: Not Acceptable. The requested media type is not supported
           schema:
             $ref: '#/definitions/Error'
-	post:
-	  tags:
+    post:
+      tags:
         - question
-	  description: Sets a challenge question. The following attributes are required: id, order, question, answer
-	  consumes:
+      description: 'Sets a challenge question. The following attributes are required: id, order, question, answer'
+      consumes:
         - application/json
-	  produces:
+      produces:
         - application/json
-	  parameters:
+      parameters:
         - $ref: '#/parameters/Accept'
-		- $ref: '#/parameters/Authorization'
-		- name: userId
+        - $ref: '#/parameters/Authorization'
+        - name: userId
           in: query
-          description: The username
+          description: The userid
           type: integer
-		  format: int32
-		- name: body
+          format: int32
+        - name: body
           in: body
           description: The challenge question to set
           schema:
             $ref: '#/definitions/ChallengeQuestion'
-	  responses:
+      responses:
         '201':
           description: Successful response
         '401':
-          description: Unauthorized. Invalid authorization header or userId does not match access token
-		'404':
-          description: Not found. Question id not found.
-		'406':
+          description: Unauthorized. Invalid confirmation key.
+        '404':
+          description: Not found. Question not found
+        '406':
           description: Not Acceptable. The requested media type is not supported
   '/challengequestions/{id}':
     get:
@@ -295,7 +295,7 @@ paths:
           type: string
         - name: type
           in: query
-          description: Claim type. Type identity indicates identity management supported claims, used for account recovery, and type user indicates useer claims.
+          description: 'Claim type. Type identity indicates identity management supported claims, used for account recovery, and type user indicates useer claims.'
           required: true
           type: string
           enum:
@@ -399,7 +399,7 @@ paths:
     put:
       tags:
         - user
-      description: Confirm user registration. This resource exists here because self registration is a two-step process in which an email notification with a link is sent to the user as the first step. In the second step, where the user confirms his registration, the user id is not known, which explains why this resource is a PUT operation against /users.
+      description: 'Confirm user registration. This resource exists here because self registration is a two-step process in which an email notification with a link is sent to the user as the first step. In the second step, where the user confirms his registration, the user id is not known, which explains why this resource is a PUT operation against /users.'
       consumes:
         - application/json
       produces:
