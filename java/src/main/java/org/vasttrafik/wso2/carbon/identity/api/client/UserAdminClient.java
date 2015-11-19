@@ -14,10 +14,14 @@ import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
+import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
+import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
+import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceStub;
 import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 
+import javax.ws.rs.*;
 /**
  * @author Lars Andersson
  *
@@ -25,8 +29,7 @@ import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 public final class UserAdminClient extends UserInformationRecoveryClient {
 	
 	private RemoteUserStoreManagerServiceStub userStoreStub = ClientUtils.getRemoteUserStoreManagerServiceStub();
-	
-	//private static final String resourceBundle = "org.vasttrafik.se.carbon.identity.api.utils.IdentityErrorListResourceBundle";
+	private UserProfileMgtServiceStub profileMgtStub = ClientUtils.getProfileManagementServiceStub();
 	
 	public UserAdminClient() {
 		super();
@@ -105,16 +108,16 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	 * @return the user 
 	 * @throws Exception if an error occurs
 	 */
-	public User getUser(Integer userId, String authorization, String ifNoneMatch, String ifModifiedSince) throws Exception {
-		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
-		
+	public User getUser(Integer userId, String authorization) throws Exception {
+		ClientUtils.authenticateIfNeeded(profileMgtStub._getServiceClient());
+
 		try {
 			// Validate the token and get the username
 			String userName = UserAdminUtils.validateToken(userId, authorization);
-			// Get the user profile
-			ClaimDTO[] dtos = userStoreStub.getUserClaimValues(userName, "default");
 			
-			return getUserFromClaimDTO(userId, userName, dtos);
+			// Get the user profile
+			UserProfileDTO profile = profileMgtStub.getUserProfile(userName, "default");
+			return getUserFromProfile(userId, userName, profile);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -158,8 +161,8 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 		try {
 			userStoreStub.updateCredential(
 				user.getUserName(), 
-				user.getPassword().getPassword(), 
-				user.getPassword().getNewPassword());
+				user.getPassword().getNewPassword(),
+				user.getPassword().getPassword());
 			
 			Verification verification = new Verification();
 			verification.setUserId(String.valueOf(user.getId()));
@@ -246,19 +249,19 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 		return identityClaims;
 	}
 	
-	protected User getUserFromClaimDTO(Integer userId, String username, ClaimDTO[] dtos) {
+	protected User getUserFromProfile(Integer userId, String username, UserProfileDTO profile) {
 		User user = new User();
 		user.setId(userId);
 		user.setUserName(username);
-		// TO-DO: How to retrieve last modified date?
-		//user.setLastModifiedDate(lastModifiedDate);
 		user.setProfileName("default");
 		user.setTenantDomain("carbon.super");
 		
-		List<UserClaim> claims = new ArrayList<UserClaim>(dtos.length);
 		
-		for (int i = 0; i < dtos.length; i++) {
-			UserClaim claim = getClaimFromDTO(dtos[i]);
+		UserFieldDTO[] fields = profile.getFieldValues();
+		List<UserClaim> claims = new ArrayList<UserClaim>(fields.length);
+		
+		for (int i = 0; i < fields.length; i++) {
+			UserClaim claim = getClaimFromField(fields[i]);
 			claims.add(claim);
 		}
 		
@@ -266,17 +269,17 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 		return user;
 	}
 	
-	protected UserClaim getClaimFromDTO(ClaimDTO dto) {
+	protected UserClaim getClaimFromField(UserFieldDTO dto) {
 		UserClaim claim = new UserClaim();
 		claim.setClaimUri(dto.getClaimUri());
-		claim.setClaimValue(dto.getValue());
-		claim.setDescription(dto.getDescription());
-		claim.setDialectURI(dto.getDialectURI());
+		claim.setClaimValue(dto.getFieldValue());
+		claim.setDescription(dto.getDisplayName());
+		//claim.setDialectURI(dto.getDialectURI());
 		claim.setDisplayOrder(dto.getDisplayOrder());
-		claim.setDisplayTag(dto.getDisplayTag());
+		claim.setDisplayTag(dto.getDisplayName());
 		claim.setRegEx(dto.getRegEx());
 		claim.setRequired(String.valueOf(dto.getRequired()));
-		claim.setSupportedByDefault(String.valueOf(dto.getSupportedByDefault()));
+		claim.setSupportedByDefault("true");
 		return claim;
 	}
 }
