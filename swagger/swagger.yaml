@@ -5,6 +5,7 @@ info:
 basePath: /vt-wso2-identity-mgmt-api
 schemes:
   - https
+  - http
 paths:
   /captchas:
     post:
@@ -132,6 +133,10 @@ paths:
           in: query
           description: The key
           type: string
+        - name: questionId
+          in: query
+          description: The question id
+          type: string
       responses:
         '200':
           description: Successful response
@@ -154,7 +159,7 @@ paths:
     post:
       tags:
         - question
-      description: 'Sets a challenge question. The following attributes are required: id, order, question, answer'
+      description: 'Sets a challenge question. The following attributes are required {id, question, answer}'
       consumes:
         - application/json
       produces:
@@ -181,55 +186,7 @@ paths:
           description: Not found. Question not found
         '406':
           description: Not Acceptable. The requested media type is not supported
-  '/challengequestions/{id}':
-    get:
-      tags:
-        - question
-      description: Retrieve the user’s challenge question for the specified claim URI ID.
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/Accept'
-        - name: id
-          in: path
-          description: Question id
-          required: true
-          type: string
-        - name: username
-          in: query
-          description: The username
-          type: string
-        - name: confirmation
-          in: query
-          description: The key
-          type: string
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ChallengeQuestion'
-          headers:
-            Content-Type:
-              description: The content type of the body.
-              type: string
-        '401':
-          description: Unauthorized. Invalid confirmation key.
-          schema:
-            $ref: '#/definitions/Error'
-        '404':
-          description: Not Found. Username or question id not found.
-          schema:
-            $ref: '#/definitions/Error'
-        '406':
-          description: Not Acceptable. The requested media type is not supported
-          schema:
-            $ref: '#/definitions/Error'
-  '/challengequestions/{id}/answers':
-    post:
+    put:
       tags:
         - question
       description: Validates the answer and confirmation code for the specified question.
@@ -240,11 +197,6 @@ paths:
       parameters:
         - $ref: '#/parameters/Accept'
         - $ref: '#/parameters/Content-Type'
-        - name: id
-          in: path
-          description: Question id
-          required: true
-          type: string
         - name: body
           in: body
           description: The answer
