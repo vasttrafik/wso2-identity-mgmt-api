@@ -104,11 +104,11 @@ public class ChallengequestionsApiServiceImpl {
 	 * @return the result of the verification
 	 * @throws Exception if an error occurs
 	 */
-	public Response verifyAnswer(String questionId, ChallengeAnswer answer) 
+	public Response verifyAnswer(ChallengeAnswer answer) 
 			throws InternalServerErrorException, NotFoundException
 	{
 		try {
-			Verification verification = client.verifyAnswer(questionId, answer);
+			Verification verification = client.verifyAnswer(answer);
 			return Response.ok(verification).build();
 		}
 		catch (NotFoundException nfe) {
