@@ -1,5 +1,7 @@
 package org.vasttrafik.wso2.carbon.identity.api.client;
 
+import java.net.URLDecoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,10 +78,12 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 		ClientUtils.authenticateIfNeeded(recoveryStub._getServiceClient());
 		
 		try {
+			String id = URLDecoder.decode(questionId);
+			
 			UserChallengesDTO questionDTO = recoveryStub.getUserChallengeQuestion(
 					username, 
 					confirmation, 
-					questionId);
+					id);
 		
 			if (questionDTO == null) {
 				throw new NotFoundException();
@@ -122,10 +126,9 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 		UserChallengesDTO[] userChallengesDTOs = new UserChallengesDTO[1];
 		userChallengesDTOs[0] = new UserChallengesDTO();
 		userChallengesDTOs[0].setId(question.getId());
-		userChallengesDTOs[0].setOrder(question.getOrder());
 		userChallengesDTOs[0].setQuestion(question.getQuestion());
 		userChallengesDTOs[0].setAnswer(question.getAnswer());
-			
+		
 		try {
 			// Set the challenge question of the user
 			identityMgmtStub.setChallengeQuestionsOfUser(userName, userChallengesDTOs);
@@ -143,14 +146,14 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 	 * @return the result of the verification
 	 * @throws Exception if an error occurs
 	 */
-	public Verification verifyAnswer(String questionId, ChallengeAnswer answer) throws Exception {
+	public Verification verifyAnswer(ChallengeAnswer answer) throws Exception {
 		ClientUtils.authenticateIfNeeded(recoveryStub._getServiceClient());
 		
 		try {
 			VerificationBean bean = recoveryStub.verifyUserChallengeAnswer(
 					answer.getUserName(), 
 					answer.getConfirmation(), 
-					questionId, 
+					answer.getQuestionId(), 
 					answer.getAnswer());
 			
 			return getVerificationFromBean(bean);
