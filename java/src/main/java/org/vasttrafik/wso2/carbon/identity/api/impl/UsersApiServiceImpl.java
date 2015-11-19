@@ -72,14 +72,15 @@ public class UsersApiServiceImpl {
 	 * @return the user 
 	 * @throws Exception if an error occurs
 	 */
-	public Response getUser(Integer userId, String authorization, String ifNoneMatch, String ifModifiedSince) 
+	public Response getUser(Integer userId, String authorization) 
 		throws InternalServerErrorException, NotAuthorizedException, NotFoundException
 	{
 		try {
-			User user = client.getUser(userId, authorization, ifNoneMatch, ifModifiedSince);
+			User user = client.getUser(userId, authorization);
 			return Response.ok(user).build();
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			Response response = ResponseUtils.serverError(e);
 			throw new InternalServerErrorException(response);
 		}
