@@ -19,7 +19,7 @@ import javax.ws.rs.*;
 @Produces({ MediaType.APPLICATION_JSON  })
 public class Users implements IdentityResourceBundleAware {
 
-   private final UsersApiServiceImpl delegate = new UsersApiServiceImpl();
+	private final UsersApiServiceImpl delegate = new UsersApiServiceImpl();
 
     @PUT
     public Response confirmUserRegistration(
@@ -60,12 +60,10 @@ public class Users implements IdentityResourceBundleAware {
     public Response getUser(
     		@PathParam("userId") Integer userId,
     		@HeaderParam("Accept") String accept,
-    		@HeaderParam("Authorization") String authorization,
-    		@HeaderParam("If-None-Match") String ifNoneMatch, 
-    		@HeaderParam("If-Modified-Since") String ifModifiedSince)
+    		@HeaderParam("Authorization") String authorization)
     	throws InternalServerErrorException, NotAuthorizedException, NotFoundException
     {
-    	return delegate.getUser(userId, authorization, ifNoneMatch, ifModifiedSince);
+		return delegate.getUser(userId, authorization);
     }
 	
     @PUT
