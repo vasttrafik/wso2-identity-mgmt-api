@@ -25,8 +25,9 @@ public class ChallengeQuestions implements IdentityResourceBundleAware {
     public Response getChallengequestions(
     		@HeaderParam("Accept") String accept,
     		@QueryParam("username") String username,
+			@QueryParam("queryId") String queryId,
     		@QueryParam("confirmation") String confirmation) 
-    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException
+    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException, NotFoundException
     {
     	ResponseUtils.checkParameter(
     			resourceBundle,
@@ -41,7 +42,10 @@ public class ChallengeQuestions implements IdentityResourceBundleAware {
     			new String[]{}, 
     			confirmation);
     	
-        return delegate.getChallengequestions(username, confirmation);
+		if (queryId != null && !queryId.equals(""))
+			return delegate.getChallengequestion(queryId, username, confirmation);
+		else
+			return delegate.getChallengequestions(username, confirmation);
     }
 	
 	@POST
@@ -61,42 +65,39 @@ public class ChallengeQuestions implements IdentityResourceBundleAware {
         return delegate.setChallengequestion(authorization, userId, question);
     }
 	
-    @GET
-    @Path("/{id}")
-    public Response getChallengequestion(
-    		@PathParam("id") String id, 
-    		@HeaderParam("Accept") String accept, 
-    		@QueryParam("username") String username, 
-    		@QueryParam("confirmation") String confirmation)
-    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException, NotFoundException
-    {
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"username", 
-    			true, 
-    			new String[]{}, 
-    			username);
-    	
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"confirmation", 
-    			true, 
-    			new String[]{}, 
-    			confirmation);
-    	
-        return delegate.getChallengequestion(id, username, confirmation);
-    }
-	
-    @POST
-    @Path("/{id}/answers")
+    @PUT
     public Response verifyAnswer(
     		@PathParam("id") String id, 
     		@HeaderParam("Accept") String accept, 
     		@HeaderParam("Content-Type") String contentType, 
     		ChallengeAnswer answer)
-    	throws InternalServerErrorException, NotFoundException
+    	throws BadRequestException, InternalServerErrorException, NotFoundException
     {
-        return delegate.verifyAnswer(id, answer);
+		ResponseUtils.checkParameter(
+    			resourceBundle,
+    			"username", 
+    			true, 
+    			new String[]{}, answer.getUserName());
+				
+		ResponseUtils.checkParameter(
+    			resourceBundle,
+    			"confirmation", 
+    			true, 
+    			new String[]{}, answer.getConfirmation());
+				
+		ResponseUtils.checkParameter(
+    			resourceBundle,
+    			"questionId", 
+    			true, 
+    			new String[]{}, answer.getQuestionId());
+				
+		ResponseUtils.checkParameter(
+    			resourceBundle,
+    			"answer", 
+    			true, 
+    			new String[]{}, answer.getAnswer());
+				
+        return delegate.verifyAnswer(answer);
     }
 }
 
