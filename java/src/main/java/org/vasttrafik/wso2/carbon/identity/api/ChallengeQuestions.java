@@ -11,7 +11,7 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson, VÃ¤sttrafik 2015
  *
  */
 @Path("/challengequestions")

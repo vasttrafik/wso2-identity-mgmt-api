@@ -18,7 +18,7 @@ import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson, VÃ¤sttrafik 2015
  *
  */
 public final class CaptchaManagementClient extends UserInformationRecoveryClient {

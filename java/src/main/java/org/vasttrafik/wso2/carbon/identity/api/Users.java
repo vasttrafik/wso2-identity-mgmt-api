@@ -11,7 +11,7 @@ import javax.ws.rs.*;
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson, VÃ¤sttrafik 2015
  *
  */
 @Path("/users")

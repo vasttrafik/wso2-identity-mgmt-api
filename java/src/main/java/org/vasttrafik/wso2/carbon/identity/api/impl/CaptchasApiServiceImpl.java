@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson, VÃ¤sttrafik 2015
  *
  */
 public class CaptchasApiServiceImpl {

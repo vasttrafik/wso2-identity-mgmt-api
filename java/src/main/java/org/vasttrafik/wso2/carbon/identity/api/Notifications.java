@@ -10,7 +10,7 @@ import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson, VÃ¤sttrafik 2015
  *
  */
 @Path("/notifications")

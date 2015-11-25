@@ -10,22 +10,22 @@ public final class IdentityErrorListResourceBundle_sv_SE extends AbstractErrorLi
 
 	private static Object[][] content = {
 		// Identity server defined error codes
-		{"17001","Felaktigt användarnamn","Användaren {0} existerar inte. Ange korrekt användarnamn och försök igen."},
-		{"17002","Felaktigt lösenord","Det angivna lösenordet är felaktigt. Ange korrekt lösenord och försök igen."},
-		{"17003","Kontot är låst","Användarkontot är låst och måste låsas upp."},
-		{"18001","Felaktig kod","Den angivna koden är felaktig. Ange korrekt kod och försök igen."},
-		{"18002","Ogiltig nyckel/kod","Den angivna nyckeln/koden är inte längre giltig."},
-		{"18003","Felaktigt användarnamn","Användaren {0} existerar inte. Ange korrekt användarnamn och försök igen"},
-		{"18004","Felaktigt svar","Det angivna svaret {0} är felaktigt. Försök igen."},
-		{"18013","Felaktig kod","Den angivna koden är felaktig. Ange korrekt kod och försök igen."},
+		{"17001","Felaktigt anvÃ¤ndarnamn","AnvÃ¤ndaren {0} existerar inte. Ange korrekt anvÃ¤ndarnamn och fÃ¶rsÃ¶k igen."},
+		{"17002","Felaktigt lÃ¶senord","Det angivna lÃ¶senordet Ã¤r felaktigt. Ange korrekt lÃ¶senord och fÃ¶rsÃ¶k igen."},
+		{"17003","Kontot Ã¤r lÃ¥st","AnvÃ¤ndarkontot Ã¤r lÃ¥st och mÃ¤ste lÃ¥sas upp."},
+		{"18001","Felaktig kod","Den angivna koden Ã¤r felaktig. Ange korrekt kod och fÃ¶rsÃ¶k igen."},
+		{"18002","Ogiltig nyckel/kod","Den angivna nyckeln/koden Ã¤r inte lÃ¤ngre giltig."},
+		{"18003","Felaktigt anvÃ¤ndarnamn","AnvÃ¤ndaren {0} existerar inte. Ange korrekt anvÃ¤ndarnamn och fÃ¶rsÃ¶k igen"},
+		{"18004","Felaktigt svar","Det angivna svaret {0} Ã¤r felaktigt. fÃ¶rsÃ¶k igen."},
+		{"18013","Felaktig kod","Den angivna koden Ã¤r felaktig. Ange korrekt kod och fÃ¶rsÃ¶k igen."},
 		// Custom error codes
-		{"1000","Ogiltigt parametervärde","Det angivna värdet {0} för parametern {1} är ogiltigt."},
+		{"1000","Ogiltigt parametervÃ¤rde","Det angivna vÃ¤rdet {0} fÃ¶r parametern {1} Ã¤r ogiltigt."},
 		{"1001","Resursen hittades inte","Den angivna resursen {0} hittades inte."},
-		{"1002","Upptaget användarnamn","Användanamnet {0} är upptaget. Var vänlig välj ett annat."},
-		{"1003","Ogiltig token","Angiven token är inte längre giltig. Var vänlig logga in på nytt."},
-		{"1004","Felaktig token","Angiven token är felaktig. Var vänlig ange en korrekt token."},
-		{"1005","Felaktig token","Angiven token tillhör en annan användare. Var vänlig ange en korrekt token."},
-		{"1006","Felaktigt användarnamn/lösenord","Angivet användarnamn/lösenord felaktigt. Var vänlig försök igen."}
+		{"1002","Upptaget anvÃ¤ndarnamn","AnvÃ¤ndarnamnet {0} Ã¤r upptaget. Var vÃ¤nlig vÃ¤lj ett annat."},
+		{"1003","Ogiltig token","Angiven token Ã¤r inte lÃ¤ngre giltig. Var vÃ¤nlig logga in pÃ¥ nytt."},
+		{"1004","Felaktig token","Angiven token Ã¤r felaktig. Var vÃ¤nlig ange en korrekt token."},
+		{"1005","Felaktig token","Angiven token tillhÃ¶r en annan anvÃ¤ndare. Var vÃ¤nlig ange en korrekt token."},
+		{"1006","Felaktigt anvÃ¤ndarnamn/lÃ¶senord","Angivet anvÃ¤ndarnamn/lÃ¶senord felaktigt. Var vÃ¤nlig fÃ¶rsÃ¶k igen."},
 	};
 	
 	@Override
