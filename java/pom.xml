@@ -10,6 +10,8 @@
   <description>vt-wso2-identity-mgmt-api</description>
   <properties>
     <CApp.type>webapp/jaxws</CApp.type>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -170,6 +172,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
+          <encoding>UTF-8</encoding>
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
