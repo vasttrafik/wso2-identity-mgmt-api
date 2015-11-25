@@ -7,7 +7,7 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.User;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserConfirmation;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 

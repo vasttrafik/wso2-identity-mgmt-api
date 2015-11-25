@@ -11,7 +11,7 @@ import javax.ws.rs.NotFoundException;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeAnswer;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeQuestion;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
 import org.wso2.carbon.identity.base.IdentityException;

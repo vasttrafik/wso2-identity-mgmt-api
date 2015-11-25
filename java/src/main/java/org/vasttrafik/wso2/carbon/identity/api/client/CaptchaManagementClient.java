@@ -9,7 +9,7 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.Captcha;
 import org.vasttrafik.wso2.carbon.identity.api.beans.CaptchaVerification;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;

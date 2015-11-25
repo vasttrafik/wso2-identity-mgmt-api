@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
