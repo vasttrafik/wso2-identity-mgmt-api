@@ -48,10 +48,13 @@ public class UserInformationRecoveryClient extends AbstractClient {
 		
 		// Check if the verifiction was successful or not
 		if (!bean.getVerified()) {
-			// Get the error code
+			// Get the error code and lookup a localized error message
 			String error = ResponseUtils.getErrorMessage(resourceBundle, bean.getError(), null);
-			// Lookup a localized error message
-			verification.setError(error);
+			
+			if (error != null || !"".equals(error))
+				verification.setError(error);
+			else
+				verification.setError(bean.getError());
 		}
 		else {
 			verification.setError(bean.getError());
