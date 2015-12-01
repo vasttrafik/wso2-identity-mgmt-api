@@ -31,6 +31,8 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	private RemoteUserStoreManagerServiceStub userStoreStub = ClientUtils.getRemoteUserStoreManagerServiceStub();
 	private UserProfileMgtServiceStub profileMgtStub = ClientUtils.getProfileManagementServiceStub();
 	
+	private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+	
 	public UserAdminClient() {
 		super();
 	}
@@ -82,6 +84,11 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			
 			if (isExistingUser(username))
 				ResponseUtils.preconditionFailed(resourceBundle, 1002L, new Object[][]{{},{username}});
+				
+			String emailAddress = getUserEmail(user);
+			
+			if (isExistingAccount(emailAddress))
+				ResponseUtils.preconditionFailed(resourceBundle, 1007L, new Object[][]{{},{emailAddress}});
 				
 			UserIdentityClaimDTO[] identityClaims = getUserIdentityClaimsFromUserClaims(user.getClaims());
 			VerificationBean bean = recoveryStub.registerUser(
@@ -224,6 +231,31 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			throw e;
         }
     }
+	
+	protected boolean isExistingAccount(String emailAddress) throws Exception {
+		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		
+        try {
+            String[] users = userStoreStub.getUserList(emailClaimURI, emailAddress, "default");
+			return (users != null && users.length > 0);
+        } 
+        catch (Exception e) {
+        	e.printStackTrace();
+			throw e;
+        }
+	}
+	
+	protected String getUserEmail(User user) {
+		List<UserClaim> claims = user.getClaims();
+		
+		for (UserClaim claim : claims) {
+			String claimURI = claim.getClaimUri();
+			
+			if (emailClaimURI.equals(claimURI))
+				return claim.getClaimValue();
+		}
+		return "";
+	}
 	
 	protected ClaimValue[] getClaimsFromUserClaims(List<UserClaim> userClaims) {
 		ClaimValue[] claims = new ClaimValue[userClaims.size()];
