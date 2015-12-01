@@ -529,6 +529,10 @@ definitions:
     properties:
       userName:
         type: string
+	  claims:
+	    type: array
+        items:
+          $ref: '#/definitions/UserClaim'
       captcha:
         $ref: '#/definitions/Captcha'
       code:
