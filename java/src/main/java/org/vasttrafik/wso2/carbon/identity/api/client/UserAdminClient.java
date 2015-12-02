@@ -184,9 +184,29 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 
 	protected Verification updateUserProfile(User user) throws Exception {
 		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		ClientUtils.authenticateIfNeeded(profileMgtStub._getServiceClient());
 		
 		try {
+			// Get the user profile
+			UserProfileDTO profile = profileMgtStub.getUserProfile(user.getUserName(), "default");
+			
+			if (profile == null)
+				throw new NotFoundException();
+				
+			// Get the field values
+			UserFieldDTO[] fields = profile.getFieldValues();
+			// Get the current email address
+			String currentEmailAddress = getUserEmailClaimValue(fields);
+			// Get the new claims
 			ClaimValue[] claims = getClaimsFromUserClaims(user.getClaims());
+			// Get the new email address
+			String newEmailAddress = getUserEmailClaimValue(claims);
+			
+			if (!currentEmailAddress.equalsIgnoreCase(newEmailAddress)) {
+				if (isExistingAccount(newEmailAddress))
+					ResponseUtils.preconditionFailed(resourceBundle, 1007L, new Object[][]{{},{newEmailAddress}});
+			}
+			
 			userStoreStub.setUserClaimValues(
 					user.getUserName(), 
 					claims, 
@@ -218,6 +238,24 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	protected String getUserEmailClaimValue(ClaimValue[] claims) {
+		if (claims != null) {
+			for (ClaimValue claim : claims) 
+				if ("http://wso2.org/claims/emailaddress".equals(claim.getClaimURI()))
+					return claim.getValue();
+		}
+		return null;
+	}
+	
+	protected String getUserEmailClaimValue(UserFieldDTO[] claims) {
+		if (claims != null) {
+			for (UserFieldDTO claim : claims) 
+				if ("http://wso2.org/claims/emailaddress".equals(claim.getClaimUri()))
+					return claim.getFieldValue();
+		}
+		return null;
 	}
 	
 	protected boolean isExistingUser(String userName) throws Exception {

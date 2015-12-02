@@ -104,6 +104,12 @@ public class UsersApiServiceImpl {
 			Verification verification = client.updateUser(userId, action, authorization, user);
 			return Response.ok(verification).build();
 		}
+		catch (NotFoundException ne) {
+			throw ne;
+		}
+		catch( ClientErrorException ce) {
+			throw ce;
+		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
 			throw new InternalServerErrorException(response);
