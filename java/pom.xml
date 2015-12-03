@@ -193,7 +193,7 @@
           	WEB-INF/lib/wsdl4j*.jar
           	WEB-INF/lib/XmlSchema*.jar
           </packagingExcludes>
-          <warName>${project.artifactId}</warName>
+          <warName>idmgt-api</warName>
         </configuration>
       </plugin>
       <plugin>
