@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-<display-name>jersey</display-name>
+<display-name>Västtrafik Identity Management API</display-name>
 
   <servlet>
     <servlet-name>IdentityManagementAPI</servlet-name>
