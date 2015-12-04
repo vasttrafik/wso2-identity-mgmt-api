@@ -98,16 +98,19 @@ public class UsersApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response updateUser(Integer userId, String action, String authorization, User user) 
-		throws InternalServerErrorException, NotAuthorizedException, NotFoundException
+		throws ForbiddenException, InternalServerErrorException, NotAuthorizedException, NotFoundException
 	{
 		try {
 			Verification verification = client.updateUser(userId, action, authorization, user);
 			return Response.ok(verification).build();
 		}
+		catch (ForbiddenException ne) {
+			throw ne;
+		}
 		catch (NotFoundException ne) {
 			throw ne;
 		}
-		catch( ClientErrorException ce) {
+		catch(ClientErrorException ce) {
 			throw ce;
 		}
 		catch (Exception e) {

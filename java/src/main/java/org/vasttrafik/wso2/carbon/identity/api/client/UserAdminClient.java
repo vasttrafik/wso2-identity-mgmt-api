@@ -122,6 +122,9 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			// Validate the token and get the username
 			String userName = UserAdminUtils.validateToken(userId, authorization);
 			
+			if ("admin".equalsIgnoreCase(userName))
+				throw new ForbiddenException();
+			
 			// Get the user profile
 			UserProfileDTO profile = profileMgtStub.getUserProfile(userName, "default");
 			return getUserFromProfile(userId, userName, profile);
@@ -165,6 +168,9 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	protected Verification updatePassword(User user) throws Exception {
 		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
 		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
+		
 		try {
 			userStoreStub.updateCredential(
 				user.getUserName(), 
@@ -186,6 +192,9 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
 		ClientUtils.authenticateIfNeeded(profileMgtStub._getServiceClient());
 		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
+		
 		try {
 			// Get the user profile
 			UserProfileDTO profile = profileMgtStub.getUserProfile(user.getUserName(), "default");
@@ -202,7 +211,7 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			// Get the new email address
 			String newEmailAddress = getUserEmailClaimValue(claims);
 			
-			if (!currentEmailAddress.equalsIgnoreCase(newEmailAddress)) {
+			if (currentEmailAddress == null || !currentEmailAddress.equalsIgnoreCase(newEmailAddress)) {
 				if (isExistingAccount(newEmailAddress))
 					ResponseUtils.preconditionFailed(resourceBundle, 1007L, new Object[][]{{},{newEmailAddress}});
 			}
@@ -225,6 +234,9 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	
 	protected Verification recoverPassword(User user) throws Exception {
 		ClientUtils.authenticateIfNeeded(recoveryStub._getServiceClient());
+		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
 		
 		try {
 			VerificationBean bean = recoveryStub.updatePassword(

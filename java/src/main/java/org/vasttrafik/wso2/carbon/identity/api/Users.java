@@ -75,7 +75,7 @@ public class Users implements IdentityResourceBundleAware {
     		@HeaderParam("Authorization") String authorization,
     		@HeaderParam("Content-Type") String contentType, 
     		User user)
-    	throws BadRequestException,  InternalServerErrorException, NotAuthorizedException, NotFoundException
+    	throws BadRequestException,  ForbiddenException, InternalServerErrorException, NotAuthorizedException, NotFoundException
     {
     	ResponseUtils.checkParameter(
     			resourceBundle,
