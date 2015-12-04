@@ -12,6 +12,7 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeAnswer;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeQuestion;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
 import org.wso2.carbon.identity.base.IdentityException;
@@ -59,6 +60,9 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 			}
 			
 			return questions;
+		}
+		catch (IdentityMgtServiceException ie) {
+			ResponseUtils.preconditionFailed(resourceBundle, 1008L, new Object[][]{{},{username}});
 		}
 		catch (Exception e) {
 			e.printStackTrace();

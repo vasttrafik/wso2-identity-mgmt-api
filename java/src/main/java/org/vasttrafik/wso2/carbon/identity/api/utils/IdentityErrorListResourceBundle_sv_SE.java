@@ -26,7 +26,8 @@ public final class IdentityErrorListResourceBundle_sv_SE extends AbstractErrorLi
 		{"1004","Felaktig token","Angiven token är felaktig. Var vänlig ange en korrekt token."},
 		{"1005","Felaktig token","Angiven token tillhör en annan användare. Var vänlig ange en korrekt token."},
 		{"1006","Felaktigt användarnamn/lösenord","Angivet användarnamn/lösenord felaktigt. Var vänlig försök igen."},
-		{"1007","Det finns redan ett konto med samma mailadress","Angiven mailadress används redan av ett annat konto. Var vänlig ange en annan adress."}
+		{"1007","Det finns redan ett konto med samma mailadress","Angiven mailadress används redan av ett annat konto. Var vänlig ange en annan adress."},
+		{"1008","Hemlig fråga saknas","Användaren {0} saknar hemlig fråga."}
 	};
 	
 	@Override
