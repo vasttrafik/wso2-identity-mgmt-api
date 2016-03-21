@@ -1,12 +1,13 @@
 package org.vasttrafik.wso2.carbon.identity.api;
 
+import javax.validation.constraints.NotNull;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 import org.vasttrafik.wso2.carbon.identity.api.impl.ClaimsApiServiceImpl;
 import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 /**
  * 
@@ -16,31 +17,17 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 @Path("/claims")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON  })
-public class Claims implements IdentityResourceBundleAware {
+public final class Claims {
 
    private final ClaimsApiServiceImpl delegate = new ClaimsApiServiceImpl();
 
     @GET
     public Response getClaims(
-    		@QueryParam("dialect") String dialect, 
-    		@QueryParam("type") String type, 
-    		@HeaderParam("Accept") String accept)
-    	throws BadRequestException, InternalServerErrorException
+    		@NotNull(message= "{param.dialect.notnull}") @QueryParam("dialect") final String dialect, 
+    		@NotNull(message= "{param.type.notnull}") @QueryParam("type") final String type, 
+    		@HeaderParam("Accept") final String accept)
+    	throws ClientErrorException
     {
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"dialect", 
-    			true, 
-    			new String[]{}, 
-    			dialect);
-    	
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"type", 
-    			true, 
-    			new String[]{"user", "identity"}, 
-    			type);
-    	
     	return delegate.getClaims(dialect,type);
     }
 }

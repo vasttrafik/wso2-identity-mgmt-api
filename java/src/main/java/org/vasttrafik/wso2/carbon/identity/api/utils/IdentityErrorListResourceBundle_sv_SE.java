@@ -27,7 +27,12 @@ public final class IdentityErrorListResourceBundle_sv_SE extends AbstractErrorLi
 		{"1005","Felaktig token","Angiven token tillhör en annan användare. Var vänlig ange en korrekt token."},
 		{"1006","Felaktigt användarnamn/lösenord","Angivet användarnamn/lösenord felaktigt. Var vänlig försök igen."},
 		{"1007","Det finns redan ett konto med samma mailadress","Angiven mailadress används redan av ett annat konto. Var vänlig ange en annan adress."},
-		{"1008","Hemlig fråga saknas","Användaren {0} saknar hemlig fråga."}
+		{"1008","Hemlig fråga saknas","Användaren {0} saknar hemlig fråga."},
+		{"1101","Ogiltig token","Angiven token är inte längre giltig. Var vänlig logga in på nytt."},
+		{"1102","Ogiltig token","Angiven token är ogiltig. Var vänlig ange en korrekt token."},
+		{"1103","Felaktig token","Angiven token tillhör en annan användare. Var vänlig ange en korrekt token."},
+		{"1104","Ej behörig","Användaren saknar behörighet att utföra begärd operation."},
+		{"1105","Token saknas","Obligatorisk JWT token saknas."}
 	};
 	
 	@Override

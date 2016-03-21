@@ -1,28 +1,32 @@
 package org.vasttrafik.wso2.carbon.identity.api.impl;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
+
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.client.CaptchaManagementClient;
+import org.vasttrafik.wso2.carbon.common.api.beans.Error;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 
 /**
  * 
  * @author Lars Andersson, Västtrafik 2015
  *
  */
-public class CaptchasApiServiceImpl {
+public class CaptchasApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	
 	private CaptchaManagementClient client = new CaptchaManagementClient();
+	
+	private static final String[] actions = {"verifyAccount", "verifyCode", "verifyUser"};
   
 	/**
 	 * Generate a captcha.
 	 * @return a captcha
 	 * @throws Exception if a captcha could not be generated
 	 */
-	public Response generateCaptcha() throws InternalServerErrorException
+	public Response generateCaptcha() throws ServerErrorException
 	{
 		try {
 			Captcha captcha = client.generateCaptcha();
@@ -30,7 +34,7 @@ public class CaptchasApiServiceImpl {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 	
@@ -42,15 +46,29 @@ public class CaptchasApiServiceImpl {
 	 * @return the result of the verification
 	 * @throws Exception if an error occurs
 	 */
-	public Response verifyCaptcha(String action, CaptchaVerification captcha) throws InternalServerErrorException
+	public Response verifyCaptcha(String action, CaptchaVerification captcha) throws ServerErrorException
 	{	
 		try {
+			responseUtils.checkParameter(
+	    			"action", 
+	    			true, 
+	    			actions, 
+	    			action);
+			
 			Verification verification = client.verifyCaptcha(action, captcha);
 			return Response.ok(verification).build();
 		}
+		catch (BadRequestException bre) {
+			// Create an error
+			Error error = responseUtils.buildError(1001L, new Object[][]{null,{action, "action"}});
+			// Return result
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity(error)
+					.build();
+		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 	
@@ -60,7 +78,7 @@ public class CaptchasApiServiceImpl {
 	 * @return a byte array containing the captcha image
 	 * @throws Exception if the captcha could not be retrieved
 	 */
-	public Response getCaptcha(String id) throws InternalServerErrorException, NotFoundException
+	public Response getCaptcha(String id) throws ServerErrorException, NotFoundException
 	{		
 		try {
 			Object captcha = client.getCaptcha(id);
@@ -72,7 +90,7 @@ public class CaptchasApiServiceImpl {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 }

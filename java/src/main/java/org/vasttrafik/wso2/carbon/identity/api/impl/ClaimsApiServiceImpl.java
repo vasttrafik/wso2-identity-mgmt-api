@@ -3,18 +3,19 @@ package org.vasttrafik.wso2.carbon.identity.api.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
+
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
 import org.vasttrafik.wso2.carbon.identity.api.client.ClaimManagementClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.core.Response;
 
 /**
  * @author Lars Andersson
  *
  */
-public class ClaimsApiServiceImpl {
+public class ClaimsApiServiceImpl extends IdentityMgmtApiServiceImpl {
   
 	/**
 	 * Retrieves user claims
@@ -24,7 +25,8 @@ public class ClaimsApiServiceImpl {
 	 * @return a list of claims
 	 * @throws Exception if an error occurs
 	 */
-	public Response getClaims(String dialect, String claimType) throws InternalServerErrorException
+	public Response getClaims(String dialect, String claimType) 
+			throws BadRequestException, ServerErrorException
 	{
 		ClaimManagementClient client = new ClaimManagementClient();
 	
@@ -40,7 +42,7 @@ public class ClaimsApiServiceImpl {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 }

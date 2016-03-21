@@ -1,21 +1,23 @@
 package org.vasttrafik.wso2.carbon.identity.api.impl;
 
-import org.vasttrafik.wso2.carbon.identity.api.beans.*;
-import org.vasttrafik.wso2.carbon.identity.api.client.ChallengeQuestionsClient;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-
 import java.util.List;
 
-import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
+
+import org.vasttrafik.wso2.carbon.identity.api.beans.*;
+import org.vasttrafik.wso2.carbon.identity.api.client.ChallengeQuestionsClient;
+import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 /**
  * @author Lars Andersson
  *
  */
-public class ChallengequestionsApiServiceImpl {
+public class ChallengequestionsApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	
 	private ChallengeQuestionsClient client = new ChallengeQuestionsClient();
   
@@ -27,7 +29,7 @@ public class ChallengequestionsApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response getChallengequestions(String username, String confirmation)
-		  throws NotAuthorizedException, InternalServerErrorException
+		  throws NotAuthorizedException, ServerErrorException
 	{
 		try {
 			List<ChallengeQuestion> questions = client.getChallengequestions(username, confirmation);
@@ -39,7 +41,7 @@ public class ChallengequestionsApiServiceImpl {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
   
@@ -52,7 +54,7 @@ public class ChallengequestionsApiServiceImpl {
 	 * @throws Exception
 	 */
 	public Response getChallengequestion(String questionId, String username, String confirmation) 
-		throws InternalServerErrorException, NotFoundException, NotAuthorizedException
+		throws ServerErrorException, NotFoundException, NotAuthorizedException
 	{
 		try {
 			ChallengeQuestion question = client.getChallengequestion(questionId, username, confirmation);
@@ -64,7 +66,7 @@ public class ChallengequestionsApiServiceImpl {
 		}
 		catch (Exception e) { 
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 	
@@ -77,11 +79,19 @@ public class ChallengequestionsApiServiceImpl {
 	 * @throws Exception
 	 */
 	public Response setChallengequestion(String authorization, Integer userId, ChallengeQuestion question) 
-		throws InternalServerErrorException, NotFoundException, NotAuthorizedException
+		throws ServerErrorException, NotFoundException, NotAuthorizedException
 	{
 		try {
-			client.setChallengequestion(authorization, userId, question);
+			AuthenticatedUser user = authorize(authorization);
+			
+			if (!user.getUserId().equals(userId))
+				throw new NotAuthorizedException("JWT token user id does not match the id of the user.");
+			
+			client.setChallengequestion(user, question);
 			return Response.ok().build();
+		}
+		catch (BadRequestException bre) {
+			throw bre;
 		}
 		catch (NotAuthorizedException na) {
 			Response response = Response.status(401).build();
@@ -93,7 +103,7 @@ public class ChallengequestionsApiServiceImpl {
 		}
 		catch (Exception e) { 
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
   
@@ -105,7 +115,7 @@ public class ChallengequestionsApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response verifyAnswer(ChallengeAnswer answer) 
-			throws InternalServerErrorException, NotFoundException
+			throws ServerErrorException, NotFoundException
 	{
 		try {
 			Verification verification = client.verifyAnswer(answer);
@@ -117,7 +127,7 @@ public class ChallengequestionsApiServiceImpl {
 		}
 		catch (Exception e) { 
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 }

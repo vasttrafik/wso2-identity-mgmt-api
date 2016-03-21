@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Lars Andersson
  *
@@ -12,9 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class User  {
   
   private Integer id = null;
+  @NotNull(message= "{user.username.notnull}") 
   private String userName = null;
+  @NotNull(message= "{user.password.notnull}") 
   private Password password = null;
+  @NotNull(message= "{user.claims.notnull}") 
   private List<UserClaim> claims = new ArrayList<UserClaim>();
+  @NotNull(message= "{user.profile.notnull}") 
   private String profileName = null;
   private String tenantDomain = null;
   private Date lastModifiedDate = null;

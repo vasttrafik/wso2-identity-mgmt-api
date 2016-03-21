@@ -1,21 +1,23 @@
 package org.vasttrafik.wso2.carbon.identity.api.impl;
 
-import org.vasttrafik.wso2.carbon.identity.api.beans.*;
-import org.vasttrafik.wso2.carbon.identity.api.client.UserAdminClient;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
+
+
+
+import org.vasttrafik.wso2.carbon.identity.api.beans.*;
+import org.vasttrafik.wso2.carbon.identity.api.client.UserAdminClient;
+import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 /**
  * @author Lars Andersson
  *
  */
-public class UsersApiServiceImpl {
+public class UsersApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	
 	private UserAdminClient client = new UserAdminClient();
   
@@ -26,7 +28,7 @@ public class UsersApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response confirmUserRegistration(UserConfirmation confirmation) 
-		throws InternalServerErrorException, NotFoundException
+		throws ServerErrorException, NotFoundException
 	{
 		try {
 			Verification verification = client.confirmUserRegistration(confirmation);
@@ -34,7 +36,7 @@ public class UsersApiServiceImpl {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
   
@@ -45,21 +47,15 @@ public class UsersApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response registerUser(User user) 
-		throws InternalServerErrorException
+		throws ServerErrorException
 	{
 		try {
 			Verification verification = client.registerUser(user);
 			return Response.ok(verification).build();
 		}
-		catch (BadRequestException be) {
-			throw be;
-		}
-		catch (ClientErrorException ce) {
-			throw ce;
-		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
   
@@ -73,16 +69,20 @@ public class UsersApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response getUser(Integer userId, String authorization) 
-		throws InternalServerErrorException, NotAuthorizedException, NotFoundException
+		throws ServerErrorException
 	{
 		try {
-			User user = client.getUser(userId, authorization);
+			AuthenticatedUser authenticatedUser = authorize(authorization);
+			
+			if (!isOwnerOrAdmin(userId))
+				throw new Exception("User id in JWT token does not match the user id in request");
+			
+			User user = client.getUser(userId, authenticatedUser.getUserName());
 			return Response.ok(user).build();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
   
@@ -98,10 +98,17 @@ public class UsersApiServiceImpl {
 	 * @throws Exception if an error occurs
 	 */
 	public Response updateUser(Integer userId, String action, String authorization, User user) 
-		throws ForbiddenException, InternalServerErrorException, NotAuthorizedException, NotFoundException
+		throws ForbiddenException, ServerErrorException, NotAuthorizedException, NotFoundException
 	{
 		try {
-			Verification verification = client.updateUser(userId, action, authorization, user);
+			AuthenticatedUser authenticatedUser = authorize(authorization);
+			
+			if (!isOwnerOrAdmin(userId))
+				throw new Exception("User id in JWT token does not match the user id in request");
+			
+			user.setUserName(authenticatedUser.getUserName());
+			
+			Verification verification = client.updateUser(action, user);
 			return Response.ok(verification).build();
 		}
 		catch (ForbiddenException ne) {
@@ -110,12 +117,12 @@ public class UsersApiServiceImpl {
 		catch (NotFoundException ne) {
 			throw ne;
 		}
-		catch(ClientErrorException ce) {
-			throw ce;
+		catch (NotAuthorizedException nae) {
+			throw nae;
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 }

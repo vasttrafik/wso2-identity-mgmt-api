@@ -1,5 +1,7 @@
 package org.vasttrafik.wso2.carbon.identity.api;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
@@ -7,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.impl.ChallengequestionsApiServiceImpl;
 import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 /**
  * 
@@ -17,31 +18,18 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 @Path("/challengequestions")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
-public class ChallengeQuestions implements IdentityResourceBundleAware {
+public final class ChallengeQuestions {
 
    private final ChallengequestionsApiServiceImpl delegate = new ChallengequestionsApiServiceImpl();
 
     @GET
     public Response getChallengequestions(
-    		@HeaderParam("Accept") String accept,
-    		@QueryParam("username") String username,
-			@QueryParam("queryId") String queryId,
-    		@QueryParam("confirmation") String confirmation) 
-    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException, NotFoundException
+    		@HeaderParam("Accept") final String accept,
+    		@NotNull(message= "{param.username.notnull}") @QueryParam("username") final String username,
+			@QueryParam("queryId") final String queryId,
+			@NotNull(message= "{param.confirmation.notnull}") @QueryParam("confirmation") final String confirmation) 
+    	throws ClientErrorException
     {
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"username", 
-    			true, 
-    			new String[]{}, username);
-    	
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"confirmation", 
-    			true, 
-    			new String[]{}, 
-    			confirmation);
-    	
 		if (queryId != null && !queryId.equals(""))
 			return delegate.getChallengequestion(queryId, username, confirmation);
 		else
@@ -50,53 +38,23 @@ public class ChallengeQuestions implements IdentityResourceBundleAware {
 	
 	@POST
     public Response setChallengequestion(
-    		@HeaderParam("Accept") String accept,
-			@HeaderParam("Authorization") String authorization,
-    		@QueryParam("userId") Integer userId,
-			ChallengeQuestion question) 
-    	throws BadRequestException, InternalServerErrorException, NotAuthorizedException, NotFoundException
+    		@HeaderParam("Accept") final String accept,
+			@HeaderParam("X-JWT-Assertion") final String authorization,
+			@NotNull(message= "{param.userid.notnull}") @QueryParam("userId") final Integer userId,
+			@NotNull(message= "{question.notnull}") @Valid final ChallengeQuestion question) 
+    	throws ClientErrorException
     {
-    	ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"userId", 
-    			true, 
-    			new String[]{}, (userId != null ? String.valueOf(userId) : null));
-      	
         return delegate.setChallengequestion(authorization, userId, question);
     }
 	
     @PUT
     public Response verifyAnswer(
-    		@PathParam("id") String id, 
-    		@HeaderParam("Accept") String accept, 
-    		@HeaderParam("Content-Type") String contentType, 
-    		ChallengeAnswer answer)
-    	throws BadRequestException, InternalServerErrorException, NotFoundException
-    {
-		ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"username", 
-    			true, 
-    			new String[]{}, answer.getUserName());
-				
-		ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"confirmation", 
-    			true, 
-    			new String[]{}, answer.getConfirmation());
-				
-		ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"questionId", 
-    			true, 
-    			new String[]{}, answer.getQuestionId());
-				
-		ResponseUtils.checkParameter(
-    			resourceBundle,
-    			"answer", 
-    			true, 
-    			new String[]{}, answer.getAnswer());
-				
+    		@PathParam("id") final String id, 
+    		@HeaderParam("Accept") final String accept, 
+    		@HeaderParam("Content-Type") final String contentType, 
+    		@NotNull(message= "{answer.notnull}") @Valid final ChallengeAnswer answer)
+    	throws ClientErrorException
+    {	
         return delegate.verifyAnswer(answer);
     }
 }

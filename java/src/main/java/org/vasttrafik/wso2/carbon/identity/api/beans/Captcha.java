@@ -1,5 +1,6 @@
 package org.vasttrafik.wso2.carbon.identity.api.beans;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,7 +10,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Captcha")
 public class Captcha  {
   
+  @NotNull(message= "{captcha.image.notnull}")
   private String imageId = null;
+  @NotNull(message= "{captcha.key.notnull}")
   private String secretKey = null;
   private String userAnswer = null;
 

@@ -1,7 +1,6 @@
 package org.vasttrafik.wso2.carbon.identity.api.client;
 
 import java.net.URLDecoder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +10,12 @@ import javax.ws.rs.NotFoundException;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeAnswer;
 import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeQuestion;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
+import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
-
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.mgt.IdentityMgtServiceException;
 import org.wso2.carbon.identity.mgt.stub.UserIdentityManagementAdminServiceStub;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionIdsDTO;
@@ -61,9 +61,9 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 			
 			return questions;
 		}
-		catch (IdentityMgtServiceException ie) {
-			ResponseUtils.preconditionFailed(resourceBundle, 1008L, new Object[][]{{},{username}});
-		}
+		//catch (IdentityMgtServiceException ie) {
+			//responseUtils.preconditionFailed(1008L, new Object[][]{{},{username}});
+		//}
 		catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -113,19 +113,9 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 	 * @return the challenge question
 	 * @throws Exception
 	 */
-	public void setChallengequestion(String authorization, Integer userId, ChallengeQuestion question) throws Exception {
+	public void setChallengequestion(AuthenticatedUser user, ChallengeQuestion question) throws Exception {
 		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
 		ClientUtils.authenticateIfNeeded(identityMgmtStub._getServiceClient());
-		
-		String userName = null;
-		
-		try {
-			 // Validate the token and get the username
-			userName = UserAdminUtils.validateToken(userId, authorization);
-		}
-		catch (Exception e) {
-			throw new NotAuthorizedException(e.getMessage());
-		}
 		
 		UserChallengesDTO[] userChallengesDTOs = new UserChallengesDTO[1];
 		userChallengesDTOs[0] = new UserChallengesDTO();
@@ -135,11 +125,12 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 		
 		try {
 			// Set the challenge question of the user
-			identityMgmtStub.setChallengeQuestionsOfUser(userName, userChallengesDTOs);
+			identityMgmtStub.setChallengeQuestionsOfUser(
+					user.getUserName(), userChallengesDTOs);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new NotFoundException(e.getMessage());
+			throw new NotFoundException();
 		}
 	}
 	

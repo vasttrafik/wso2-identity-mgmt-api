@@ -8,8 +8,6 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserConfirmation;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
@@ -17,7 +15,6 @@ import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceStub;
-import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 
@@ -83,12 +80,12 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			String username = user.getUserName();
 			
 			if (isExistingUser(username))
-				ResponseUtils.preconditionFailed(resourceBundle, 1002L, new Object[][]{{},{username}});
+				responseUtils.preconditionFailed(1002L, new Object[][]{{},{username}});
 				
 			String emailAddress = getUserEmail(user);
 			
 			if (isExistingAccount(emailAddress))
-				ResponseUtils.preconditionFailed(resourceBundle, 1007L, new Object[][]{{},{emailAddress}});
+				responseUtils.preconditionFailed(1007L, new Object[][]{{},{emailAddress}});
 				
 			UserIdentityClaimDTO[] identityClaims = getUserIdentityClaimsFromUserClaims(user.getClaims());
 			VerificationBean bean = recoveryStub.registerUser(
@@ -115,13 +112,10 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	 * @return the user 
 	 * @throws Exception if an error occurs
 	 */
-	public User getUser(Integer userId, String authorization) throws Exception {
+	public User getUser(Integer userId, String userName) throws Exception {
 		ClientUtils.authenticateIfNeeded(profileMgtStub._getServiceClient());
 
 		try {
-			// Validate the token and get the username
-			String userName = UserAdminUtils.validateToken(userId, authorization);
-			
 			if ("admin".equalsIgnoreCase(userName))
 				throw new ForbiddenException();
 			
@@ -146,14 +140,13 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 	 * @return a verification indicating if the user objects was updated or not
 	 * @throws Exception if an error occurs
 	 */
-	public Verification updateUser(Integer userId, String action, String authorization, User user) throws Exception {
+	public Verification updateUser(String action, User user) throws Exception {
 		Verification verification = null;
 		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
+		
 		if ("updatePassword".equalsIgnoreCase(action) || "updateProfile".equalsIgnoreCase(action)) {
-			// Validate the token and get the username
-			String userName = UserAdminUtils.validateToken(userId, authorization);
-			user.setUserName(userName);
-				
 			if ("updatePassword".equalsIgnoreCase(action))
 				verification = updatePassword(user);
 			else
@@ -213,7 +206,7 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			
 			if (currentEmailAddress == null || !currentEmailAddress.equalsIgnoreCase(newEmailAddress)) {
 				if (isExistingAccount(newEmailAddress))
-					ResponseUtils.preconditionFailed(resourceBundle, 1007L, new Object[][]{{},{newEmailAddress}});
+					responseUtils.preconditionFailed(1007L, new Object[][]{{},{newEmailAddress}});
 			}
 			
 			userStoreStub.setUserClaimValues(

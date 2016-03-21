@@ -1,18 +1,17 @@
 package org.vasttrafik.wso2.carbon.identity.api.impl;
 
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
+
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.client.NotificationsClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.core.Response;
 
 /**
  * @author Lars Andersson
  *
  */
-public class NotificationsApiServiceImpl  {
+public class NotificationsApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	
 	private NotificationsClient client = new NotificationsClient();
   
@@ -22,7 +21,8 @@ public class NotificationsApiServiceImpl  {
 	 * @return a verification indicating if the notification was sent or not
 	 * @throws Exception if an error occurs
 	 */
-	public Response sendRecoveryNotification(RecoveryNotification notification) throws BadRequestException, InternalServerErrorException
+	public Response sendRecoveryNotification(RecoveryNotification notification) 
+			throws ServerErrorException
 	{
 		try {
 			Verification verification = client.sendRecoveryNotification(notification);
@@ -30,7 +30,7 @@ public class NotificationsApiServiceImpl  {
 		}
 		catch (Exception e) {
 			Response response = ResponseUtils.serverError(e);
-			throw new InternalServerErrorException(response);
+			throw new ServerErrorException(response);
 		}
 	}
 }

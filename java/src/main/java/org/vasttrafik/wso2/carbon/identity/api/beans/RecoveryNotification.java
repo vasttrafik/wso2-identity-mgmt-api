@@ -1,5 +1,6 @@
 package org.vasttrafik.wso2.carbon.identity.api.beans;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,8 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RecoveryNotification")
 public class RecoveryNotification  {
   
+  @NotNull(message = "{recovery.username.notnull}")
   private String userName = null;
+  @NotNull(message = "{recovery.key.notnull}")
   private String key = null;
+  @NotNull(message = "{recovery.type.notnull}")
   private String notificationType = null;
 
   public RecoveryNotification() {

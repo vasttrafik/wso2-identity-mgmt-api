@@ -1,5 +1,6 @@
 package org.vasttrafik.wso2.carbon.identity.api.beans;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,13 +10,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ChallengeQuestion")
 public class ChallengeQuestion  {
   
+  @NotNull(message = "{question.answer.notnull}")
   private String answer = null;
   private String error = null;
+  @NotNull(message = "{question.id.notnull}")
   private String id = null;
   private String key = null;
   private Integer order = null;
   private Boolean primary = null;
+  
+  @NotNull(message = "{question.question.notnull}")
   private String question = null;
+  
   private Boolean verfied = null;
 
   public ChallengeQuestion() {

@@ -2,6 +2,8 @@ package org.vasttrafik.wso2.carbon.identity.api.beans;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,6 +15,7 @@ public class CaptchaVerification  {
   
   private String userName = null;
   private List<UserClaim> claims = null;
+  @NotNull(message = "{verification.captcha.notnull}") @Valid
   private Captcha captcha = null;
   private String code = null;
   private String tenantDomain = null;
