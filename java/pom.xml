@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.vasttrafik.se.identity</groupId>
   <artifactId>vt-wso2-identity-mgmt-api</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>war</packaging>
   <name>vt-wso2-identity-mgmt-api</name>
   <description>vt-wso2-identity-mgmt-api</description>
+  
   <properties>
     <CApp.type>webapp/jaxws</CApp.type>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	<carbon.version>4.4.3</carbon.version>
+	<apimgt.version>5.0.3</apimgt.version>
+	<identity.version>5.0.7</identity.version>
+	<jersey.version>2.22</jersey.version>
   </properties>
+  
   <dependencies>
     <dependency>
 	  <groupId>javax.ws.rs</groupId>
@@ -32,17 +39,17 @@
     <dependency>
  	  <groupId>org.glassfish.jersey.containers</groupId>
  	  <artifactId>jersey-container-servlet</artifactId>
- 	  <version>2.22</version>
+ 	  <version>${jersey.version}</version>
   	</dependency>
   	<dependency>
 	  <groupId>org.glassfish.jersey.media</groupId>
 	  <artifactId>jersey-media-json-jackson</artifactId>
-	  <version>2.22</version>
+	  <version>${jersey.version}</version>
   	</dependency>
 	<dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-bean-validation</artifactId>
-      <version>2.22</version>
+      <version>${jersey.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
@@ -50,87 +57,87 @@
       <version>1.1.0.Final</version>
     </dependency>
     <dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
-      <version>4.2.1</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
 	<dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-      <version>4.2.2</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.identity.mgt.stub</artifactId>
-      <version>4.2.0</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
 	<dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
-      <version>4.2.0</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
-      <version>4.2.0</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.wso2.carbon</groupId>
       <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-      <version>4.2.0</version>
+      <version>${carbon.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.identity</groupId>
       <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-      <version>4.2.3</version>
+      <version>${identity.version}</version>
       <scope>provided</scope>
     </dependency>
      <dependency>
-      <groupId>org.wso2.carbon</groupId>
+      <groupId>org.wso2.carbon.registry</groupId>
       <artifactId>org.wso2.carbon.registry.ws.stub</artifactId>
-      <version>4.2.0</version>
+      <version>4.4.8</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.wso2.securevault</groupId>
       <artifactId>org.wso2.securevault</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.0-wso2v2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.wso2.carbon</groupId>
       <artifactId>org.wso2.carbon.securevault</artifactId>
-      <version>4.2.0</version>
+      <version>${carbon.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.ws.commons.axiom.wso2</groupId>
       <artifactId>axiom</artifactId>
-      <version>1.2.11.wso2v1</version>
+      <version>1.2.11.wso2v9</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.axis2.wso2</groupId>
       <artifactId>axis2</artifactId>
-      <version>1.6.1.wso2v4</version>
+      <version>1.6.1.wso2v16</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>commons-codec.wso2</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.3.0.wso2v1</version>
+      <version>1.4.0.wso2v1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents.wso2</groupId>
       <artifactId>httpcore</artifactId>
-      <version>4.3.0.wso2v1</version>
+      <version>4.3.3.wso2v1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -142,31 +149,31 @@
     <dependency>
       <groupId>commons-httpclient.wso2</groupId>
       <artifactId>commons-httpclient</artifactId>
-      <version>3.1.0.wso2v1</version>
+      <version>3.1.0.wso2v2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>wsdl4j.wso2</groupId>
       <artifactId>wsdl4j</artifactId>
-      <version>1.6.2.wso2v2</version>
+      <version>1.6.2.wso2v4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.ws.commons.schema.wso2</groupId>
       <artifactId>XmlSchema</artifactId>
-      <version>1.4.7.wso2v1</version>
+      <version>1.4.7.wso2v3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.neethi.wso2</groupId>
       <artifactId>neethi</artifactId>
-      <version>2.0.4.wso2v3</version>
+      <version>2.0.4.wso2v4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
 	  <groupId>org.vasttrafik.se.common</groupId>
 	  <artifactId>vt-developer-portal-api-utils</artifactId>
-	  <version>1.0.0</version>
+	  <version>1.1.0</version>
 		<exclusions>
 		  <exclusion>
 		    <groupId>*</groupId>
