@@ -14,9 +14,7 @@ import javax.validation.constraints.NotNull;
 public class User  {
   
   private Integer id = null;
-  @NotNull(message= "{user.username.notnull}") 
   private String userName = null;
-  @NotNull(message= "{user.password.notnull}") 
   private Password password = null;
   @NotNull(message= "{user.claims.notnull}") 
   private List<UserClaim> claims = new ArrayList<UserClaim>();
