@@ -12,12 +12,9 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.ChallengeQuestion;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
 import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
-import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
-import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.mgt.IdentityMgtServiceException;
 import org.wso2.carbon.identity.mgt.stub.UserIdentityManagementAdminServiceStub;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
+import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionIdsDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserChallengesDTO;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
@@ -33,6 +30,32 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 	
 	public ChallengeQuestionsClient() {
 		super();
+	}
+
+	/**
+	 * Retrieves all challenge questions available
+	 * @return a list of challenge questions
+	 * @throws Exception if an error occurs
+	 */
+	public List<ChallengeQuestion> getAllChallengequestions() throws Exception {
+		ClientUtils.authenticateIfNeeded(recoveryStub._getServiceClient());
+		
+		try {
+			List<ChallengeQuestion> questions = new ArrayList<ChallengeQuestion>();
+			ChallengeQuestionDTO[] challengeQuestionDTOs = recoveryStub.getAllChallengeQuestions();
+					
+			for(ChallengeQuestionDTO challengeQuestionDTO : challengeQuestionDTOs) {
+				ChallengeQuestion question = new ChallengeQuestion();
+				question.setQuestion(challengeQuestionDTO.getQuestion());
+				question.setId(challengeQuestionDTO.getQuestionSetId());
+				questions.add(question);
+			}
+			return questions;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
 	/**
@@ -82,6 +105,7 @@ public final class ChallengeQuestionsClient extends UserInformationRecoveryClien
 		ClientUtils.authenticateIfNeeded(recoveryStub._getServiceClient());
 		
 		try {
+			@SuppressWarnings("deprecation")
 			String id = URLDecoder.decode(questionId);
 			
 			UserChallengesDTO questionDTO = recoveryStub.getUserChallengeQuestion(

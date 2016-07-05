@@ -101,14 +101,22 @@ public class UsersApiServiceImpl extends IdentityMgmtApiServiceImpl {
 		throws ForbiddenException, ServerErrorException, NotAuthorizedException, NotFoundException
 	{
 		try {
-			AuthenticatedUser authenticatedUser = authorize(authorization);
 			
-			if (!isOwnerOrAdmin(userId))
-				throw new Exception("User id in JWT token does not match the user id in request");
+			Verification verification = null;
 			
-			user.setUserName(authenticatedUser.getUserName());
+			// No authentication for recover password when hitting that stage
+			if (!"recoverPassword".equals(action)) {
+				
+				AuthenticatedUser authenticatedUser = authorize(authorization);
+				
+				if (!isOwnerOrAdmin(userId))
+					throw new Exception("User id in JWT token does not match the user id in request");
+				
+				user.setUserName(authenticatedUser.getUserName());
+			}
 			
-			Verification verification = client.updateUser(action, user);
+			verification = client.updateUser(action, user);
+
 			return Response.ok(verification).build();
 		}
 		catch (ForbiddenException ne) {

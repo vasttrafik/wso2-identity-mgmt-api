@@ -20,7 +20,29 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 public class ChallengequestionsApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	
 	private ChallengeQuestionsClient client = new ChallengeQuestionsClient();
-  
+
+	/**
+	 * Retrieves all challenge questions available
+	 * @return a list of challenge questions
+	 * @throws Exception if an error occurs
+	 */
+	public Response getAllChallengequestions()
+		  throws NotAuthorizedException, ServerErrorException
+	{
+		try {
+			List<ChallengeQuestion> questions = client.getAllChallengequestions();
+			return Response.ok(questions).build();
+		}
+		catch (NotAuthorizedException na) {
+			Response response = Response.status(401).build();
+			throw new NotAuthorizedException(response);
+		}
+		catch (Exception e) {
+			Response response = ResponseUtils.serverError(e);
+			throw new ServerErrorException(response);
+		}
+	}
+	
 	/**
 	 * Retrieves all challenge questions of a user
 	 * @param username the username of the user 

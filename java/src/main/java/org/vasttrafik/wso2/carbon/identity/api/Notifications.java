@@ -8,7 +8,6 @@ import javax.ws.rs.*;
 
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.impl.NotificationsApiServiceImpl;
-import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
 
 /**
  * 

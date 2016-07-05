@@ -7,7 +7,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 import org.vasttrafik.wso2.carbon.identity.api.impl.ClaimsApiServiceImpl;
-import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
 
 /**
  * 

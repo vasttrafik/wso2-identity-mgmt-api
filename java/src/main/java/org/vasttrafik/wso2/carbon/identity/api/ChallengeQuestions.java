@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.impl.ChallengequestionsApiServiceImpl;
-import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
 
 /**
  * 
@@ -22,10 +21,19 @@ public final class ChallengeQuestions {
 
    private final ChallengequestionsApiServiceImpl delegate = new ChallengequestionsApiServiceImpl();
 
+   @GET
+   public Response getAllChallengequestions(
+   		@HeaderParam("Accept") final String accept) 
+   	throws ClientErrorException
+   {
+			return delegate.getAllChallengequestions();
+   }
+   
     @GET
+    @Path("/{username}")
     public Response getChallengequestions(
+    		@PathParam("username") final String username,
     		@HeaderParam("Accept") final String accept,
-    		@NotNull(message= "{param.username.notnull}") @QueryParam("username") final String username,
 			@QueryParam("queryId") final String queryId,
 			@NotNull(message= "{param.confirmation.notnull}") @QueryParam("confirmation") final String confirmation) 
     	throws ClientErrorException

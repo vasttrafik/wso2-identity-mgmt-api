@@ -147,10 +147,14 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			throw new ForbiddenException();
 		
 		if ("updatePassword".equalsIgnoreCase(action) || "updateProfile".equalsIgnoreCase(action)) {
-			if ("updatePassword".equalsIgnoreCase(action))
+			if ("updatePassword".equalsIgnoreCase(action)) {
 				verification = updatePassword(user);
-			else
+			}
+				
+			else {
 				verification = updateUserProfile(user);
+			}
+				
 		}
 		else if ("recoverPassword".equals(action)) {
 			verification = recoverPassword(user);

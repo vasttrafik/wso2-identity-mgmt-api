@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.vasttrafik.wso2.carbon.identity.api.beans.*;
 import org.vasttrafik.wso2.carbon.identity.api.impl.CaptchasApiServiceImpl;
-import org.vasttrafik.wso2.carbon.identity.api.utils.IdentityResourceBundleAware;
 /**
  * 
  * @author Lars Andersson, Västtrafik 2015

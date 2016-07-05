@@ -264,6 +264,49 @@ paths:
           description: Unsupported media type
           schema:
             $ref: '#/definitions/Error'
+  '/challengequestions/{username}':
+    get:
+      tags:
+        - question
+      description: Retrieves the user’s challenge questions with the generated key.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - name: username
+          in: path
+          description: The username
+          required: true
+          type: string
+        - name: confirmation
+          in: query
+          description: The key
+          type: string
+        - name: questionId
+          in: query
+          description: The question id
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ChallengeQuestion'
+        '401':
+          description: Unauthorized. Invalid confirmation key.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found. Username not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
   /claims:
     get:
       tags:
