@@ -51,15 +51,19 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 					confirmation.getCode(), 
 					captchaBean, 
 					confirmation.getTenantDomain());
+			
+			Verification verification = getVerificationFromBean(bean);
+			
+			if(verification.getVerified()) {	
+				String[] roles = new String[]{"Internal/subscriber"};
 				
-			String[] roles = new String[]{"Internal/subscriber"};
-			
-			userStoreStub.updateRoleListOfUser(
-					confirmation.getUsername(), 
-					new String[0], 
-					roles);
-			
-			return getVerificationFromBean(bean);
+				userStoreStub.updateRoleListOfUser(
+						confirmation.getUsername(), 
+						new String[0], 
+						roles);				
+			}
+
+			return verification;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
