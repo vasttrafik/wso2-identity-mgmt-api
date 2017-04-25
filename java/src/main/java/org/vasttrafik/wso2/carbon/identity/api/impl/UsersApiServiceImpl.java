@@ -85,6 +85,31 @@ public class UsersApiServiceImpl extends IdentityMgmtApiServiceImpl {
 			throw new ServerErrorException(response);
 		}
 	}
+	
+	/**
+	 * Retrieves the user profile of  user
+	 * @param userId the user id
+	 * @param authorization an OAuth2 authorization header
+	 * @return response
+	 * @throws Exception if an error occurs
+	 */
+	public Response deleteUser(Integer userId, String authorization) 
+		throws ServerErrorException
+	{
+		try {
+			AuthenticatedUser authenticatedUser = authorize(authorization);
+			
+			if (!isOwnerOrAdmin(userId))
+				throw new Exception("User id in JWT token does not match the user id in request");
+			
+			Verification verification = client.deleteUser(authenticatedUser.getUserName());
+			return Response.ok(verification).build();
+		}
+		catch (Exception e) {
+			Response response = ResponseUtils.serverError(e);
+			throw new ServerErrorException(response);
+		}
+	}
   
 	/**
 	 * Updates a user account

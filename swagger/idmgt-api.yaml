@@ -559,6 +559,44 @@ paths:
           description: Unsupported media type
           schema:
             $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - user
+      description: Removes the details of a user account.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/Accept'
+        - $ref: '#/parameters/Authorization'
+        - $ref: '#/parameters/Content-Type'
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Verification'
+          headers:
+            Content-Type:
+              description: The content type of the body.
+              type: string
+        '401':
+          description: Unauthorized. Invalid captcha or confirmation.
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found. Username not found.
+          schema:
+            $ref: '#/definitions/Error'
+        '406':
+          description: Not Acceptable. The requested media type is not supported
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported media type
+          schema:
+            $ref: '#/definitions/Error'
 parameters:
   Accept:
     name: Accept

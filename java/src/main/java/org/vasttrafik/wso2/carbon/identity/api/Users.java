@@ -51,6 +51,17 @@ public final class Users {
     {
 		return delegate.getUser(userId, authorization);
     }
+    
+    @DELETE
+    @Path("/{userId}")
+    public Response deleteUser(
+    		@PathParam("userId") final Integer userId,
+    		@HeaderParam("Accept") final String accept,
+    		@HeaderParam("X-JWT-Assertion") final String authorization)
+    	throws ClientErrorException
+    {
+		return delegate.deleteUser(userId, authorization);
+    }
 	
     @PUT
     @Path("/{userId}")

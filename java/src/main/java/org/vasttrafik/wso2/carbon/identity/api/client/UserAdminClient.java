@@ -106,6 +106,33 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Deletes a user
+	 * @param user the user to delete
+	 * @return a verification indicating if the user was deleted or not
+	 * @throws Exception if an error occurs
+	 */
+	public Verification deleteUser(String username) throws Exception {
+		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		
+		if ("admin".equalsIgnoreCase(username))
+			throw new ForbiddenException();
+		
+		try {
+			
+			userStoreStub.deleteUser(username);
+			
+			Verification verification = new Verification();
+			verification.setVerified(true);
+			return verification;
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
 	/**
 	 * Retrieves the user profile of  user
