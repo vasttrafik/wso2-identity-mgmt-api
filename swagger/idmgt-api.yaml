@@ -522,13 +522,15 @@ paths:
         - $ref: '#/parameters/userId'
         - name: action
           in: query
-          description: 'What part of the user account to update. The value updateProfile indicates that the user profile should be updated, and the value updatePassword that the password should be updated Finally, the value recoverPassword indicates that the password should be reset, in which case a confirmation code is required.'
+          description: 'What part of the user account to update. The value updateProfile indicates that the user profile should be updated, and the value updatePassword that the password should be updated. The value recoverPassword indicates that the password should be reset, in which case a confirmation code is required. The actions enableTotp and disableTotp adds the required properties for enabling TOTP (Time-Based One-Time password) for the user when logging in.'
           required: true
           type: string
           enum:
             - updateProfile
             - updatePassword
             - recoverPassword
+            - enableTotp
+            - disableTotp
         - name: body
           in: body
           description: The user object.

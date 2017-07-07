@@ -7,6 +7,7 @@ import org.vasttrafik.wso2.carbon.identity.api.beans.User;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserClaim;
 import org.vasttrafik.wso2.carbon.identity.api.beans.UserConfirmation;
 import org.vasttrafik.wso2.carbon.identity.api.beans.Verification;
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
@@ -184,11 +185,16 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 				
 			else {
 				verification = updateUserProfile(user);
-			}
-				
+			}	
 		}
 		else if ("recoverPassword".equals(action)) {
 			verification = recoverPassword(user);
+		}
+		else if ("enableTotp".equals(action)) {
+			verification = enableTotp(user);
+		}
+		else if ("disableTotp".equals(action)) {
+			verification = disableTotp(user);
 		}
 		return verification;
 	}
@@ -273,6 +279,55 @@ public final class UserAdminClient extends UserInformationRecoveryClient {
 					user.getPassword().getNewPassword());
 			
 			return getVerificationFromBean(bean);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	protected Verification enableTotp(User user) throws Exception {
+		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
+		
+		try {
+			
+			String secret = Base32.random();
+			
+			userStoreStub.setUserClaimValue(user.getUserName(), "http://wso2.org/claims/enableTOTP", "true", user.getProfileName());
+			userStoreStub.setUserClaimValue(user.getUserName(), "http://wso2.org/claims/secretKey", secret, user.getProfileName());
+			
+			Verification verification = new Verification();
+			verification.setKey(secret);
+			verification.setUserId(String.valueOf(user.getId()));
+			verification.setVerified(true);
+			
+			return verification;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	protected Verification disableTotp(User user) throws Exception {
+		ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+		
+		if ("admin".equalsIgnoreCase(user.getUserName()))
+			throw new ForbiddenException();
+		
+		try {
+			
+			userStoreStub.setUserClaimValue(user.getUserName(), "http://wso2.org/claims/enableTOTP", "false", user.getProfileName());
+			userStoreStub.setUserClaimValue(user.getUserName(), "http://wso2.org/claims/secretKey", "", user.getProfileName());
+			
+			Verification verification = new Verification();
+			verification.setUserId(String.valueOf(user.getId()));
+			verification.setVerified(true);
+			
+			return verification;
 		}
 		catch (Exception e) {
 			e.printStackTrace();

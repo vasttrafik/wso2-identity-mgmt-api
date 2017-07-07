@@ -45,9 +45,10 @@ public final class Authenticate {
 			// Generate a token
 			JWTToken jwtToken = tokenGenerator.generateToken(userName);
 			// Create the response object
-			AuthenticatedUser user = new AuthenticatedUser(jwtToken);
+			AuthenticatedUser authenticatedUser = new AuthenticatedUser(jwtToken);
+			
 			// Create the response object
-			return Response.status(201).entity(user).build();
+			return Response.status(201).entity(authenticatedUser).build();
 		}
 		catch(NotAuthorizedException | InternalServerErrorException ie) {
 			return Response.status(Response.Status.UNAUTHORIZED)
