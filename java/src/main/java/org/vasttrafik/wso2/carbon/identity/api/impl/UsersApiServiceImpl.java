@@ -87,7 +87,7 @@ public class UsersApiServiceImpl extends IdentityMgmtApiServiceImpl {
 	}
 	
 	/**
-	 * Retrieves the user profile of  user
+	 * Deletes the user profile of  user
 	 * @param userId the user id
 	 * @param authorization an OAuth2 authorization header
 	 * @return response
