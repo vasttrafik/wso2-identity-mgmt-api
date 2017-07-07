@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.vasttrafik.se.identity</groupId>
   <artifactId>vt-wso2-identity-mgmt-api</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>war</packaging>
   <name>vt-wso2-identity-mgmt-api</name>
   <description>vt-wso2-identity-mgmt-api</description>
@@ -175,10 +175,16 @@
       <version>2.0.4.wso2v4</version>
       <scope>provided</scope>
     </dependency>
+	 <dependency>
+     <groupId>org.jboss.aerogear</groupId>
+     <artifactId>aerogear-otp-java</artifactId>
+     <version>1.0.0</version>
+     <scope>compile</scope>
+ 	</dependency>
     <dependency>
 	  <groupId>org.vasttrafik.se.common</groupId>
 	  <artifactId>vt-developer-portal-api-utils</artifactId>
-	  <version>1.1.0</version>
+	  <version>1.1.1</version>
 		<exclusions>
 		  <exclusion>
 		    <groupId>*</groupId>
